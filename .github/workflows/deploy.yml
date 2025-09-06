@@ -28,13 +28,13 @@ jobs:
             ${{ secrets.DOCKER_USERNAME }}/medianai:${{ github.sha }}
             ${{ secrets.DOCKER_USERNAME }}/medianai:latest
           file: ./Dockerfile
-          
+
       - name: Build Docker image
         run: |
           docker buildx build \
             --file ./Dockerfile \
-            --tag ghcr.io/rmaculan/medianai:${{ github.sha }} \
-            --tag ghcr.io/rmaculan/medianai:latest \
+            --tag ghcr.io/rmaculan/medianai-compose:${{ github.sha }} \
+            --tag ghcr.io/rmaculan/medianai-compose:latest \
             .
 
       - name: Deploy to VPS
