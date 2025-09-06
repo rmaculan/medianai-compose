@@ -1,0 +1,55 @@
+name: Deploy Django App to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/medianai:${{ github.sha }}
+            ${{ secrets.DOCKER_USERNAME }}/medianai:latest
+          file: ./Dockerfile
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Navigate to your application directory on the VPS
+            # IMPORTANT: Replace with the actual path on your VPS.
+            # Consider using a GitHub secret for this path, e.g., ${{ secrets.VPS_APP_PATH }}
+            cd /medianai-compose
+
+            # Stop and remove old containers to ensure a clean deployment
+            docker-compose down || true
+
+            # Pull the latest Docker image
+            docker-compose pull django-web
+
+            # Restart the Django service.
+            # Ensure environment variables like DJANGO_SECRET_KEY are securely managed on the VPS,
+            # e.g., via a .env file on the VPS or directly in the environment where docker-compose is run.
+            # Avoid passing sensitive secrets directly in the script like this for better security.
+            docker-compose up -d --no-deps django-web
+
+            echo "Deployment complete!"

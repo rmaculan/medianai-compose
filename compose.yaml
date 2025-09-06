@@ -38,16 +38,9 @@ services:
      - .env
    command: >
      sh -c "python manage.py migrate &&
-            python manage.py runserver 0.0.0.0:8000"
+            gunicorn backend.wsgi:application --bind 0.0.0.0:8000"
    volumes:
      - media_data:/app/media
-   develop:
-    watch:
-      - action: rebuild
-        path: .
-        target: .
-      - action: rebuild
-        path: requirements.txt
 volumes:
    postgres_data:
    media_data:
