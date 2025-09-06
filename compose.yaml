@@ -1,0 +1,53 @@
+# If you need more help, visit the Docker Compose reference guide at
+# https://docs.docker.com/go/compose-spec-reference/
+
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgressql/data
+    env_file:
+      - .env
+
+  django-web:
+   build: .
+   container_name: mnai
+   ports:
+     - "8000:8000"
+     - "80:8000"
+     - "443:8000"
+   depends_on:
+     - db
+   environment:
+     DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+     DEBUG: ${DEBUG}
+     DJANGO_LOGLEVEL: ${DJANGO_LOGLEVEL}
+     DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS}
+     DATABASE_ENGINE: ${DATABASE_ENGINE}
+     DATABASE_NAME: ${DATABASE_NAME}
+     DATABASE_USERNAME: ${DATABASE_USERNAME}
+ 
+     DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+     DATABASE_HOST: ${DATABASE_HOST}
+     DATABASE_PORT: ${DATABASE_PORT}
+   env_file:
+     - .env
+   command: >
+     sh -c "python manage.py migrate &&
+            python manage.py runserver 0.0.0.0:8000"
+   volumes:
+     - media_data:/app/media
+   develop:
+    watch:
+      - action: rebuild
+        path: .
+        target: .
+      - action: rebuild
+        path: requirements.txt
+volumes:
+   postgres_data:
+   media_data:

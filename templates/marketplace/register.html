@@ -1,0 +1,17 @@
+{% extends 'marketplace/base.html' %}
+
+            {% block content %}
+            <h1>Register</h1>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Register</button>
+            {% endblock %}
+        </div>
+        <footer>
+            <div class="container">
+                <p class="text-center">© 2022 Marketplace</p>
+            </div>
+        </footer>
+    </body>
+</html>

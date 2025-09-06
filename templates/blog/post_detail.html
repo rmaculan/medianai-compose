@@ -1,0 +1,537 @@
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@1.9.12"
+            integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@1.9.12"
+            integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2"
+            crossorigin="anonymous"></script>
+    
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+      .markdown-content {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        padding: 1em;
+      }
+      .markdown-content img {
+        max-width: 100%;
+        height: auto;
+      }
+      
+      .progress-bar {
+        width: 100%;
+        height: 0.5rem;
+        background-color: #e5e7eb;
+        border-radius: 9999px;
+        overflow: hidden;
+      }
+      
+      .progress-bar-fill {
+        height: 100%;
+        border-radius: 9999px;
+      }
+      
+      .progress-bar-fill.verified {
+        background-color: #10b981;
+      }
+      
+      .progress-bar-fill.pending {
+        background-color: #f59e0b;
+      }
+      
+      .progress-bar-fill.disputed {
+        background-color: #ef4444;
+      }
+    </style>
+  </head>
+  <body class="bg-gradient-to-l
+            from-gray-200 to-white-500 "
+            >
+    <!-- Navbar -->
+    {% include 'blog/navbar.html' %}
+    
+    <!-- Picture, title, subtitle, author, and job_title lines -->
+    <div class="
+      container
+      bg-white-400 
+      mx-auto 
+      px-4 
+      py-8">
+      <h1 class="text-4xl font-bold mt-2">
+        {{ post.title }}
+      </h1>
+      <p class="text-gray-500">
+        {{ post.subtitle }}
+      </p>
+      <div class="flex items-center gap-2">
+        By
+        <strong>
+          <a href="{% url 'blog:profile' post.author.username %}"
+            >
+            {{ post.author }} - 
+          </a>
+        </strong>
+        {{ post.job_title }}
+        {% if post.get_verification_badge %}
+          <div class="relative group">
+            <span class="px-2 py-1 text-xs font-semibold rounded-full 
+              {% if post.verification_status == 'verified' %}bg-green-100 text-green-800
+              {% elif post.verification_status == 'disputed' %}bg-red-100 text-red-800
+              {% elif post.verification_status == 'pending' %}bg-yellow-100 text-yellow-800
+              {% elif post.verification_status == 'warning' %}bg-orange-100 text-orange-800
+              {% elif post.verification_status == 'mixed' %}bg-purple-100 text-purple-800
+              {% endif %} cursor-help">
+              {{ post.get_verification_badge }}
+            </span>
+            <div class="
+              absolute 
+              hidden 
+              group-hover:block 
+              z-10 
+              w-64 
+              p-2 
+              mt-1 
+              text-sm 
+              bg-white 
+              border 
+              border-gray-200 
+              rounded-lg 
+              shadow-lg"
+              >
+              <div class="font-bold mb-1">Verification Details</div>
+              <div>Score: {{ post.verification_score|floatformat:2 }}</div>
+              <div class="mt-1">
+                {% if post.verification_details %}
+                  {% for category, data in post.verification_details.items %}
+                    <div class="flex justify-between">
+                      <span class="capitalize">{{ category|cut:"_" }}:</span>
+                      <span>{{ data.score|floatformat:2 }}</span>
+                    </div>
+                  {% endfor %}
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+      {% if post.use_default_image %}
+      <img
+        src="{% static 'media/default.jpg' %}"
+        alt="{{ post.title }}"
+        width="1000"
+        height="600"
+      />
+      {% else %}
+      <img
+        src="{{ post.picture.url }}"
+        alt="{{ post.title }}"
+        width="1000"
+        height="600"
+      />
+      {% endif %}
+      <p class="text-gray-500">
+        {{ post.caption }}
+      </p>
+      <p class="markdown-content">
+        {{ post.content|safe }}
+      </p>
+
+      
+
+      <!-- Poll Section -->
+      <div class="container mt-8 p-6 bg-gray-100 rounded-xl shadow-md">
+        <h3 class="text-2xl font-bold mb-4">{{ poll.question_text }}</h3>
+        
+        {% if not has_voted %}
+          <form method="post" action="{% url 'polls:vote' poll.id %}">
+            {% csrf_token %}
+            <div class="space-y-2">
+              {% for choice in poll.choice_set.all %}
+              <div class="flex items-center">
+                <input type="radio" id="choice_{{ choice.id }}" name="choice" value="{{ choice.id }}" class="mr-2">
+                <label for="choice_{{ choice.id }}">{{ choice.choice_text }}</label>
+              </div>
+              {% endfor %}
+            </div>
+            <button type="submit" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+              Submit Vote
+            </button>
+          </form>
+        {% else %}
+          <div class="text-gray-700">
+            <p>You've already voted on this poll.</p>
+            {% if verification_data %}
+              <div class="mt-4 p-4 bg-white rounded-lg shadow">
+                <h4 class="font-bold text-lg mb-2">Community Verification</h4>
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span>Post Verification Status:</span>
+                    <span class="font-semibold">{{ verification_data.status|title }}</span>
+                  </div>
+
+                  <div class="flex items-center justify-between">
+                    <span>Post Verification Score:</span>
+                    <span class="font-semibold">{{ verification_data.score|floatformat:1 }}/1.0</span>
+                  </div>
+
+                  <div class="flex items-center justify-between">
+                    <span>Author Credibility Score:</span>
+                    <span class="font-semibold">{{ verification_data.author_credibility|floatformat:1 }}/1.0</span>
+                  </div>
+
+                  <div class="mt-4">
+                    <h5 class="font-semibold mb-2">Poll Results:</h5>
+                    <ul class="space-y-1">
+                      {% for choice, votes in verification_data.results.items %}
+                        <li class="flex justify-between">
+                          <span>{{ choice }}:</span>
+                          <span>{{ votes }} ({% widthratio votes verification_data.total_votes 100 %}%)</span>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+
+                  <!-- {% if verification_data.history %}
+                  <div class="mt-4">
+                    <h5 class="font-semibold mb-2">Author Verification History:</h5>
+                    <div class="space-y-2">
+                      {% for entry in verification_data.history|slice:":3" %}
+                        <div class="p-2 bg-gray-50 rounded">
+                          <div class="flex justify-between">
+                            <span>{{ entry.timestamp|date:"M d, Y" }}</span>
+                            <span>{{ entry.status|title }}</span>
+                          </div>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                  {% endif %} -->
+                </div>
+              </div>
+            {% else %}
+              <p>Community results will be displayed here once available.</p>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="container flex items-center rounded-xl shadow-xl">
+        <div class="container 
+          bg-gradient-to-r 
+            from-gray-600 to-white-500 
+          flex items-center
+          rounded-xl
+          mx-auto 
+          h-full"
+          >
+          <form id="like-form" method="post" action="{% url 'blog:like_post' post.id %}">
+            {% csrf_token %}
+            <button 
+              type="submit" 
+              class="flex items-center
+                mt-4
+                px-4 py-2 
+                text-sm 
+                text-gray-700 
+                bg-gradient-to-l
+                  from-black-800 to-gray-100  
+                rounded-xl
+                shadow-xl 
+                border
+                hover:bg-gray-200 
+                focus:outline-none 
+                focus:ring-2 
+                focus:ring-gray-200 
+                dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 
+                dark:focus:ring-gray-600"
+              >
+                <i class="far fa-thumbs-up"></i>
+              <div class="ml-2" >
+                <span id="likes-count">
+                  {{ post.post_likes.count }}
+                </span>
+              </div>
+            </button>
+          </form>
+
+          <form id="double-like-form" method="post" action="{% url 'blog:double_like_post' post.id %}">
+            {% csrf_token %}
+            <button 
+              type="submit" 
+              class="flex items-center
+                mt-4
+                ml-2
+                px-4 py-2 
+                text-sm 
+                text-gray-700 
+                bg-gradient-to-l
+                  from-black-800 to-gray-100  
+                rounded-xl
+                shadow-xl 
+                border
+                hover:bg-gray-200 
+                focus:outline-none 
+                focus:ring-2 
+                focus:ring-gray-200 
+                dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 
+                dark:focus:ring-gray-600"
+              >
+                <i class="fas fa-heart"></i>
+              <div class="ml-2" >
+                <span>Double Like</span>
+              </div>
+            </button>
+          </form>
+          
+          <form 
+              id="dislike-form" 
+              action="{% url 'blog:dislike_post' post.id %}" 
+              method="POST"
+            >
+            {% csrf_token %}
+          
+            <button 
+                type="submit" 
+                class="
+                  px-4 
+                  py-2 
+                  mt-4
+                  ml-2
+                  text-sm 
+                  text-gray-700 
+                  bg-gradient-to-l
+                      from-black-800 to-gray-100 
+                  rounded-xl
+                  shadow-xl 
+                  border
+                  hover:bg-gray-200 
+                  focus:outline-none 
+                  focus:ring-2 
+                  focus:ring-gray-200 
+                  dark:bg-gray-700 dark:text-gray-200 
+                  dark:hover:bg-gray-600 
+                  dark:focus:ring-gray-600"
+              >
+                <i class="far fa-thumbs-down"></i>
+                <span id="dislikes-count" class="ml-2">
+                  {{ post.dislikes_count }}
+                </span>
+            </button>
+          </form>
+          
+          {% if user.is_authenticated and user != post.author %}
+          <a href="{% url 'blog:contact_author_form' post.id %}" 
+             class="
+              px-4 
+              py-2 
+              mt-4 
+              ml-4 
+              text-md 
+              rounded-xl 
+              shadow-xl 
+              hover:bg-blue-100 
+              focus:outline-none 
+              focus:ring-2 
+              focus:ring-blue-500"
+              >
+            <i class="far fa-envelope"></i>
+            <span class="ml-2">Contact Author</span>
+          </a>
+          {% endif %}
+        </div>
+      </div> 
+    </div>
+    <div class="container">
+        <h2 class="text-2xl font-bold">
+          Latest Comments
+        </h2>
+      </div>
+      
+    <div 
+      class="
+        container 
+        bg-gradient-to-r 
+          from-gray-800 to-white-500 
+        flex items-center
+        
+        mx-auto
+        
+        "         
+      >
+
+      <div class="container">
+      
+        {% include 'blog/comments.html' %}
+
+        <div class="container mt-4">
+          <form action="{% url 'blog:create_comment' post.id %}" method="POST">
+            {% csrf_token %}
+            <textarea 
+              name="comment" 
+              id="comment" 
+              cols="30" 
+              rows="10" 
+              class=" 
+                border 
+                border-gray-200 
+                rounded-xl"
+              placeholder="Write your comment here. Remember to be respectful."
+            >
+            </textarea>
+            <button 
+              type="submit" 
+              class="
+                mt-2 
+                ml-8
+                px-4 
+                py-2 
+                bg-gray-700 
+                text-white 
+                rounded-xl
+                shadow-xl
+                hover:bg-gray-600
+                focus:outline-none
+                focus:ring-2
+                focus:ring-gray-600
+                dark:bg-gray-800 
+                dark:text-gray-200 
+                dark:hover:bg-gray-700 
+                dark:focus:ring-gray-700
+                size-sm
+                "
+            >
+              Comment
+            </button>
+          </form>
+        </div>
+        <div class="flex items-center text-white">
+          <a 
+            href="{% url 'blog:index' %}" 
+          >
+            Home
+          </a>
+        </div>
+      {% if post.video == True %}
+      <div class="container">
+        <video 
+          controls 
+          width="1000" 
+          height="600"
+          >
+          <source src="{{ post.video.url }}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      
+      {% endif %}
+      </div>
+    </div>
+      
+    </div>   
+  </div>
+</div>
+
+      <script>
+        // Initialize progress bars
+        document.addEventListener('DOMContentLoaded', function() {
+          document.querySelectorAll('.progress-bar-fill').forEach(bar => {
+            bar.style.width = bar.dataset.width + '%';
+          });
+          
+          // Close modals when clicking outside
+          window.addEventListener('click', function(event) {
+            const modals = document.querySelectorAll('[id^="replyModal-"], #allCommentsModal');
+            modals.forEach(modal => {
+              if (event.target === modal) {
+                modal.classList.add('hidden');
+              }
+            });
+          });
+          
+          // Add keyboard event listener for Escape key to close modals
+          window.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+              const modals = document.querySelectorAll('[id^="replyModal-"], #allCommentsModal');
+              modals.forEach(modal => {
+                if (!modal.classList.contains('hidden')) {
+                  modal.classList.add('hidden');
+                }
+              });
+            }
+          });
+        });
+
+        // Like, Double-Like, and Dislike Forms
+        const likeForm = document.getElementById('like-form');
+        const doubleLikeForm = document.getElementById('double-like-form');
+        const dislikeForm = document.getElementById('dislike-form');
+        
+        // Track if request is in progress to prevent duplicate submissions
+        let requestInProgress = false;
+        
+        // Helper function to handle form submission and update counts
+        function handleFormSubmit(form) {
+          if (!form) return;
+          
+          form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Prevent multiple submissions
+            if (requestInProgress) {
+              return;
+            }
+            
+            requestInProgress = true;
+            
+            // Disable all buttons to prevent rapid clicking
+            likeForm.querySelector('button').disabled = true;
+            doubleLikeForm.querySelector('button').disabled = true;
+            dislikeForm.querySelector('button').disabled = true;
+            
+            fetch(this.action, {
+                method: 'POST',
+                headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                body: new FormData(this),
+              })
+              .then(response => response.json())
+              .then(data => {
+                // Update likes counter with the response data
+                document.getElementById('likes-count').innerText = data.likes_count;
+              })
+              .finally(() => {
+                // Re-enable buttons after response is received
+                requestInProgress = false;
+                likeForm.querySelector('button').disabled = false;
+                doubleLikeForm.querySelector('button').disabled = false;
+                dislikeForm.querySelector('button').disabled = false;
+              });
+          });
+        }
+        
+        // Apply the event handler to each form exactly once
+        handleFormSubmit(likeForm);
+        handleFormSubmit(doubleLikeForm);
+        handleFormSubmit(dislikeForm);
+      </script>
+      <script 
+        src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" 
+        defer
+        >
+    </script>
+  </body>
+</html>

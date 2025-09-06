@@ -1,0 +1,22 @@
+{% extends 'chat/base.html' %}
+
+{% block content %}
+    <div class="page-container px-4">
+      <div class="content">
+        
+        <form method="get" action="{% url 'chat:search_users' %}">
+          <input type="text" name="query" placeholder="Search users...">
+          <button type="submit">Search</button>
+        </form>
+      
+        {% if user.is_authenticated %}
+        
+        {% include 'chat/create_room.html' %}
+        
+        {% else %}
+        <h1>Log in to enter chat room</h1>
+        {% include 'chat/login.html' %} 
+        {% endif %}
+      </div>
+    </div>
+{% endblock %}
