@@ -8,6 +8,8 @@ on:
 jobs:
   build-and-deploy:
     environment: mnai
+    permissions:
+      packages: write # Grant write permission for packages to push to GHCR
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -25,10 +27,9 @@ jobs:
         with:
           context: .
           push: true
-          repository: ghcr.io/${{ github.repository }}
           tags: |
-            ${{ github.sha }}
-            latest
+            ghcr.io/${{ github.repository }}:${{ github.sha }}
+            ghcr.io/${{ github.repository }}:latest
           file: ./Dockerfile
 
       - name: Deploy to VPS
