@@ -14,8 +14,7 @@ services:
       - .env
 
   django-web:
-   build: .
-   image: medianai-compose:latest
+   image: ghcr.io/rmaculan/medianai-compose:latest
    container_name: mnai
    ports:
      - "8000:8000"
