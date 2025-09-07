@@ -31,34 +31,3 @@ jobs:
             ghcr.io/${{ github.repository }}:${{ github.sha }}
             ghcr.io/${{ github.repository }}:latest
           file: ./Dockerfile
-
-      - name: Deploy to VPS
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            # Navigate to your application directory on the VPS
-            # IMPORTANT: Replace with the actual path on your VPS.
-            # Consider using a GitHub secret for this path, e.g., ${{ secrets.VPS_APP_PATH }}
-            cd /medianai-compose
-
-            # Log in to GitHub Container Registry on the VPS
-            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-            # Stop and remove old containers to ensure a clean deployment
-            docker-compose down || true
-
-            # Pull the latest Docker image from GHCR
-            docker pull ghcr.io/${{ github.repository }}:latest
-
-            # Restart the Django service.
-            # IMPORTANT: Ensure your compose.yaml on the VPS is updated to use the GHCR image (e.g., image: ghcr.io/${{ github.repository }}:latest)
-            # instead of 'build: .'.
-            # Ensure environment variables like DJANGO_SECRET_KEY are securely managed on the VPS,
-            # e.g., via a .env file on the VPS or directly in the environment where docker-compose is run.
-            # Avoid passing sensitive secrets directly in the script like this for better security.
-            docker-compose up -d django-web
-
-            echo "Deployment complete!"
