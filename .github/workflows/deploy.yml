@@ -29,15 +29,13 @@ jobs:
             ${{ secrets.DOCKER_USERNAME }}/medianai:latest
           file: ./Dockerfile
 
-      # If you want to use GitHub Container Registry, make sure you are logged in and have permission.
-      # Otherwise, you can remove this step if it’s not needed:
-      # - name: Build Docker image for GHCR
-      #   run: |
-      #     docker buildx build \
-      #       --file ./Dockerfile \
-      #       --tag ghcr.io/rmaculan/medianai-compose:${{ github.sha }} \
-      #       --tag ghcr.io/rmaculan/medianai-compose:latest \
-      #       .
+      - name: Build Docker image
+        run: |
+          docker buildx build \
+            --file ./Dockerfile \
+            --tag ghcr.io/rmaculan/medianai-compose:${{ github.sha }} \
+            --tag ghcr.io/rmaculan/medianai-compose:latest \
+            .
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.0
@@ -46,8 +44,21 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            # Navigate to your application directory on the VPS
+            # IMPORTANT: Replace with the actual path on your VPS.
+            # Consider using a GitHub secret for this path, e.g., ${{ secrets.VPS_APP_PATH }}
             cd /medianai-compose
+
+            # Stop and remove old containers to ensure a clean deployment
             docker-compose down || true
+
+            # Pull the latest Docker image
             docker-compose pull django-web
+
+            # Restart the Django service.
+            # Ensure environment variables like DJANGO_SECRET_KEY are securely managed on the VPS,
+            # e.g., via a .env file on the VPS or directly in the environment where docker-compose is run.
+            # Avoid passing sensitive secrets directly in the script like this for better security.
             docker-compose up -d --no-deps django-web
+
             echo "Deployment complete!"
