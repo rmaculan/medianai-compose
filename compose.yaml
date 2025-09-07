@@ -15,6 +15,7 @@ services:
 
   django-web:
    build: .
+   image: medianai-compose-django-web:latest
    container_name: mnai
    ports:
      - "8000:8000"
