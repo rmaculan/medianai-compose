@@ -188,7 +188,8 @@ CSRF_TRUSTED_ORIGINS = [
     'http://www.medianai.io',
     'https://www.medianai.io',
     'http://148.230.90.159',
-    'https://148.230.90.159'
+    'https://148.230.90.159',
+    '2a02:4780:2d:eee0::1'
 ]
 # CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
 
