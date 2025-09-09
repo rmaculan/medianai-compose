@@ -32,14 +32,13 @@ jobs:
             ghcr.io/${{ github.repository }}:latest
           file: ./Dockerfile
 
-      # - name: Deploy to Hostinger VPS
-      #   uses: appleboy/ssh-action@v1.0.0
-      #   with:
-      #     host: ${{ secrets.VPS_HOST }}
-      #     username: ${{ secrets.VPS_USER }}
-      #     key: ${{ secrets.VPS_SSH_KEY }}
-      #     script: |
-      #       cd medianai-compose
-      #       docker compose pull
-      #       docker compose up -d
-
+      - name: Deploy to Hostinger VPS
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /home/{{ secrets.VPS_USER }}/medianai-compose
+            docker compose pull
+            docker compose up -d
