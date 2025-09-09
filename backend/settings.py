@@ -168,11 +168,10 @@ USE_TZ = True
 ### change for production ###
 # CORS_ALLOWED_ORIGINS = []: when you want to allow specific origins
 
-
-CORS_ALLOW_ALL_ORIGINS = os.environ.get("CORS_ALLOW_ALL_ORIGINS")
+CORS_ALLOW_ALL_ORIGINS = bool(os.environ.get("CORS_ALLOW_ALL_ORIGINS"))
 CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",")
 
-CSRF_COOKIE_SECURE = os.environ.get("CSRF_COOKIE_SECURE")
+CSRF_COOKIE_SECURE = bool(os.environ.get("CSRF_COOKIE_SECURE"))
 CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
 
 # Stripe Configuration (Payment System)
