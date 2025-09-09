@@ -39,7 +39,8 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            cd medianai-compose
+            cd /docker/medianai-compose/docker-compose.yml
+
             docker compose pull
             docker compose up -d
 
