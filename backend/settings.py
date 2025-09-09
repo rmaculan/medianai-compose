@@ -165,9 +165,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-### change for production ###
-# CORS_ALLOWED_ORIGINS = []: when you want to allow specific origins
-
 CORS_ALLOW_ALL_ORIGINS = bool(os.environ.get("CORS_ALLOW_ALL_ORIGINS"))
 CORS_ALLOWED_ORIGINS = [origin for origin in os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",") if origin] + ['http://localhost:8000', 'https://medianai.io']
 
