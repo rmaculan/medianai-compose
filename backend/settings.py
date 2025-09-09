@@ -169,10 +169,10 @@ USE_TZ = True
 # CORS_ALLOWED_ORIGINS = []: when you want to allow specific origins
 
 CORS_ALLOW_ALL_ORIGINS = bool(os.environ.get("CORS_ALLOW_ALL_ORIGINS"))
-CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",") + ['http://localhost:8000']
+CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",") + ['http://localhost:8000','medianai.io']
 
 CSRF_COOKIE_SECURE = bool(os.environ.get("CSRF_COOKIE_SECURE"))
-CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",") + ['http://localhost:8000']
+CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",") + ['http://localhost:8000', 'medianai.io']
 
 # Stripe Configuration (Payment System)
 STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY')
