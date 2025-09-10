@@ -166,10 +166,10 @@ USE_L10N = True
 USE_TZ = True
 
 CORS_ALLOW_ALL_ORIGINS = bool(os.environ.get("CORS_ALLOW_ALL_ORIGINS"))
-CORS_ALLOWED_ORIGINS = [origin for origin in os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",") if origin] + ['http://localhost:8000', 'https://medianai.io', 'http://www.medianai.io', 'http://148.230.90.159', 'https://148.230.90.159']
+CORS_ALLOWED_ORIGINS = [origin for origin in os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",") if origin] + ['http://localhost:8000', 'http://medianai.io','http://medianai.io','https://medianai.io', 'https://www.medianai.io', 'http://www.medianai.io', 'http://148.230.90.159', 'https://148.230.90.159']
 
 CSRF_COOKIE_SECURE = bool(os.environ.get("CSRF_COOKIE_SECURE"))
-CSRF_TRUSTED_ORIGINS = [origin for origin in os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",") if origin] + ['http://localhost:8000', 'https://medianai.io', 'http://www.medianai.io', 'http://148.230.90.159', 'https://148.230.90.159']
+CSRF_TRUSTED_ORIGINS = [origin for origin in os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",") if origin] + ['http://localhost:8000', 'http://medianai.io','http://medianai.io','https://medianai.io', 'https://www.medianai.io', 'http://www.medianai.io', 'http://148.230.90.159', 'https://148.230.90.159']
 
 # Stripe Configuration (Payment System)
 STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY')
