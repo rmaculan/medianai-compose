@@ -22,7 +22,7 @@ OLLAMA_BASE_URL = os.environ.get('OLLAMA_BASE_URL', 'http://localhost:11434')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get("DEBUG", default=0))
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",") + ['localhost', 'medianai.io', 'https://www.medianai.io', 'http://www.medianai.io']
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",") + ['localhost', 'medianai.io', 'https://www.medianai.io', 'http://www.medianai.io', '148.230.90.159', 'http://148.230.90.159', 'https://148.230.90.159']
 
 # not set
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -166,10 +166,10 @@ USE_L10N = True
 USE_TZ = True
 
 CORS_ALLOW_ALL_ORIGINS = bool(os.environ.get("CORS_ALLOW_ALL_ORIGINS"))
-CORS_ALLOWED_ORIGINS = [origin for origin in os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",") if origin] + ['http://localhost:8000', 'https://medianai.io', 'http://www.medianai.io']
+CORS_ALLOWED_ORIGINS = [origin for origin in os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",") if origin] + ['http://localhost:8000', 'https://medianai.io', 'http://www.medianai.io', '148.230.90.159', 'http://148.230.90.159', 'https://148.230.90.159']
 
 CSRF_COOKIE_SECURE = bool(os.environ.get("CSRF_COOKIE_SECURE"))
-CSRF_TRUSTED_ORIGINS = [origin for origin in os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",") if origin] + ['http://localhost:8000', 'https://medianai.io', 'http://www.medianai.io']
+CSRF_TRUSTED_ORIGINS = [origin for origin in os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",") if origin] + ['http://localhost:8000', 'https://medianai.io', 'http://www.medianai.io', '148.230.90.159', 'http://148.230.90.159', 'https://148.230.90.159']
 
 # Stripe Configuration (Payment System)
 STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY')

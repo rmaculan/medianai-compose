@@ -31,7 +31,8 @@
                     Media-N-AI Journal
                 </span>
             </a>
-            <div class="flex items-baseline ml-10 space-x-16">
+            <div class="flex items-baseline ml-10 space-x-4">
+                <!-- Notifications Icon (always visible) -->
                 <a
                   href="{% url 'notification:show-all-notifications' %}"
                   class="text-blue-500 hover:underline"
@@ -41,456 +42,452 @@
                     >{{ notifications.count }}</span
                   >
                 </a>
-                <!-- button that redirects to the templates/marketplace app -->
+                <!-- Inbox/Messages Icon (always visible) -->
+                <a
+                  href="{% url 'blog:messages' %}"
+                  class="text-blue-500 hover:underline"
+                >
+                  <span><i class="fas fa-envelope"></i></span>
+                </a>
+                <!-- Marketplace Icon (hidden on small/medium, visible on large) -->
                 <a
                   href="{% url 'marketplace:index' %}"
-                  class="text-blue-500 hover:underline"
+                  class="text-blue-500 hover:underline hidden lg:block"
                 >
                   <span><i class="fas fa-store"></i></span>
                 </a>
-  
-                <!-- button that returns to main landing page under templates -->
+                <!-- Home Icon (hidden on small/medium, visible on large) -->
                 <a
                   href="{% url 'landing_page' %}"
-                  class="text-blue-500 hover:underline"
+                  class="text-blue-500 hover:underline hidden lg:block"
                 >
                   <span><i class="fas fa-home"></i></span>
                 </a>
-                
-              </div>
-              
-              <!-- Search Modal with transparent background -->
-              <div 
-                class="modal fade" 
-                id="searchModal" 
-                tabindex="-1" 
-                role="dialog" 
-                aria-labelledby="searchModalLabel" 
-                aria-hidden="true"
+                <!-- Search Icon (always visible, triggers modal) -->
+                <button
+                    @click="isSearchModalOpen = true"
+                    class="text-blue-500 hover:underline focus:outline-none"
                 >
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                  <div class="modal-content bg-transparent">
-                    <div class="modal-body p-0">
-                      <form 
-                        action="{% url 'search:search_view' %}" 
-                        method="get" 
-                        class="mt-2"
-                        >
-                        <div class="input-group">
-                          <input 
-                            type="text" 
-                            id="searchInput" 
-                            name="q" 
-                            class="form-control bg-transparent text-gray-700" 
-                            placeholder="Search blogs, users, items..." 
-                            style="border: 1px solid rgba(255,255,255,0.3); color: #555;"
-                            >
-                          <div class="input-group-append">
-                            <button type="submit" class="text-blue-500 hover:underline">
-                              <i class="fas fa-search"></i>
-                            </button>
-                            <button 
-                              type="button" 
-                              class="text-blue-500 hover:underline" 
-                              data-dismiss="modal"
-                              >
-                              <i class="fas fa-times"></i>
-                            </button>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            
-                <a href="{% url 'blog:index' %}" class="flex items-center">
-                  <!-- Navbar Tabs-->
-                    <li>
-                        <div class="hidden md:flex space-x-4">
-                            {% if user.is_authenticated %}
-                             <!-- link to user profile -->
-                            <a 
-                                href="{% url 'blog:profile' user.username %}"
-                                class="
-                                  block 
-                                  px-4 
-                                  py-2 
-                                  text-sm 
-                                  text-gray-700 
-                                  hover:bg-gray-100 
-                                  hover:text-gray-900 
-                                  dark:text-gray-200 
-                                  dark:hover:bg-gray-700 
-                                  dark:hover:text-gray-100" 
-                                role="menuitem"
-                            >
-                                Profile
-                            </a>
-                            <a 
-                                href="{% url 'blog:create_blog_post' %}" 
-                                class="
-                                  block 
-                                  px-4 
-                                  py-2 
-                                  text-sm 
-                                  text-gray-700 
-                                  hover:bg-gray-100 
-                                  hover:text-gray-900 
-                                  dark:text-gray-200 
-                                  dark:hover:bg-gray-700 
-                                  dark:hover:text-gray-100" 
-                                role="menuitem"
-                                >
-                                    Post
-                            </a>
-                            <a 
-                                href="{% url 'blog:my_posts' %}" 
-                                class="
-                                  block 
-                                  px-4 
-                                  py-2 
-                                  text-sm 
-                                  text-gray-700 
-                                  hover:bg-gray-100 
-                                  hover:text-gray-900 
-                                  dark:text-gray-200 
-                                  dark:hover:bg-gray-700 
-                                  dark:hover:text-gray-100" 
-                                role="menuitem"
-                                >
-                                    My Blogs
-                            </a>
-                             <a
-                                href="{% url 'blog:messages' %}"
-                                class="
-                                 block
-                                 px-4
-                                 py-2
-                                 text-sm
-                                 text-gray-700
-                                 hover:bg-gray-100
-                                 hover:text-gray-900
-                                 dark:text-gray-200
-                                 dark:hover:bg-gray-700
-                                 dark:hover:text-gray-100"
-                                role="menuitem"
-                                >
-                                    Messages
-                            </a>
-                            
-                           
-                            <a 
-                                href="{% url 'blog:logout' %}" 
-                                class="
-                                  block 
-                                  px-4 
-                                  py-2 
-                                  text-sm 
-                                  text-gray-700 
-                                  hover:bg-gray-100 
-                                  hover:text-gray-900 
-                                  dark:text-gray-200 
-                                  dark:hover:bg-gray-700 
-                                  dark:hover:text-gray-100" 
-                                role="menuitem"
-                                >
-                                    Logout
-                            </a>
-                            <!-- Delete Profile Link-->
-                            <a 
-                                href="{% url 'blog:delete_profile' user.username %}" 
-                                class="
-                                  block 
-                                  px-4 
-                                  py-2 
-                                  text-sm 
-                                  text-red-700 
-                                  hover:bg-gray-100 
-                                  hover:text-brown-900 
-                                  dark:text-brown-200 
-                                  dark:hover:bg-gray-700 
-                                  dark:hover:text-brown-100" 
-                                role="menuitem"
-                                >
-                                    Delete Account
-                            </a>
-                            {% else %}
-                            <a 
-                                href="{% url 'blog:register' %}" 
-                                class="
-                                  block 
-                                  px-4 
-                                  py-2 
-                                  text-sm 
-                                  text-gray-700 
-                                  hover:bg-gray-100 
-                                  hover:text-gray-900 
-                                  dark:text-gray-200 
-                                  dark:hover:bg-gray-700 
-                                  dark:hover:text-gray-100" 
-                                role="menuitem"
-                                >
-                                    Register
-                            </a>
-                            <a 
-                                href="{% url 'blog:login' %}" 
-                                class="
-                                  block 
-                                  px-4 
-                                  py-2 
-                                  text-sm 
-                                  text-gray-700 
-                                  hover:bg-gray-100 
-                                  hover:text-gray-900 
-                                  dark:text-gray-200 
-                                  dark:hover:bg-gray-700 
-                                  dark:hover:text-gray-100" 
-                                role="menuitem"
-                                >
-                                    Login
-                            </a>
-                            {% endif %}
-                        </div>
-                    </li>
-                </a>
-
-                <!-- Dropdown Toggle Button -->
-                <button 
-                    @click="isOpen = !isOpen" 
-                    class="
-                      md:hidden 
-                      inline-flex 
-                      items-center 
-                      p-2 
-                      ml-3 
-                      text-sm 
-                      text-gray-500 rounded-lg 
-                      hover:bg-gray-100 
-                      focus:outline-none 
-                      focus:ring-2 
-                      focus:ring-gray-200 
-                      dark:text-gray-400 
-                      dark:hover:bg-gray-700 
-                      dark:focus:ring-gray-600
-                      animate-slide-down
-                      transition-transform
-                      duration-800
-                      ease-in-out
-                      "
-                    aria-controls="navbar-default" 
-                    aria-expanded="false"
-                >
-                    <span class="sr-only">
-                        Open main menu
-                    </span>
-                    <!-- SVG icon for the button -->
-                    <svg 
-                        class="w-6 h-6" 
-                        fill="currentColor" 
-                        viewBox="0 0 20 20" 
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path 
-                            fill-rule="evenodd" 
-                            d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 
-                            1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 
-                            1 0 110 2H4a1 1 0 01-1-1z" 
-                            clip-rule="evenodd"
-                        >
-                        </path>
-                    </svg>
+                    <span><i class="fas fa-search"></i></span>
                 </button>
+            </div>
 
-                <!-- Dropdown Menu -->
-                <div 
-                    id="navbar-default"
-                    :class="{ 'block': isOpen, 'hidden': !isOpen }"
-                >
-                    <ul 
-                        class="flex flex-col p-4 mt-4 border 
-                          border-gray-100 rounded-lg bg-gray-50 
-                          dark:bg-gray-800 
-                          dark:border-gray-700"
-                    >
-                        <li>
-                            <a 
-                                href="{% url 'blog:index' %}" 
-                                class="
-                                  block 
-                                  px-2 
-                                  py-1 
-                                  text-gray-700 
-                                  hover:bg-gray-100 
-                                  hover:text-gray-900 
-                                  dark:text-gray-200 
-                                  dark:hover:bg-gray-700 
-                                  dark:hover:text-gray-100" 
-                                role="menuitem"
+            <!-- Search Modal with Tailwind CSS and Alpine.js -->
+            <div
+                x-data="{ isSearchModalOpen: false }"
+                x-show="isSearchModalOpen"
+                @click.away="isSearchModalOpen = false"
+                class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 scale-90"
+                x-transition:enter-end="opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100 scale-100"
+                x-transition:leave-end="opacity-0 scale-90"
+            >
+                <div class="bg-white p-6 rounded-lg shadow-xl w-11/12 md:w-1/2 lg:w-1/3">
+                    <div class="flex justify-end">
+                        <button @click="isSearchModalOpen = false" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <form action="{% url 'search:search_view' %}" method="get" class="mt-4">
+                        <div class="flex items-center border-b border-gray-200 py-2">
+                            <input
+                                type="text"
+                                name="q"
+                                class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                                placeholder="Search blogs, users, items..."
                             >
-                                Home
-                            </a>
-                        </li>
+                            <button type="submit" class="flex-shrink-0 bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-4 text-white py-1 px-2 rounded">
+                                Search
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <a href="{% url 'blog:index' %}" class="flex items-center">
+                <!-- Navbar Tabs-->
+                <li>
+                    <div class="hidden md:flex space-x-4">
                         {% if user.is_authenticated %}
-                        <li>
-                            <a 
-                                href="{% url 'blog:profile' user.username %}" 
-                                class="
-                                  block 
-                                  px-4 
-                                  py-2 
-                                  text-sm 
-                                  text-gray-700 
-                                  hover:bg-gray-100 
-                                  hover:text-gray-900 
-                                  dark:text-gray-200 
-                                  dark:hover:bg-gray-700 
-                                  dark:hover:text-gray-100" 
-                                role="menuitem"
-                                >
-                                    Profile
-                            </a>
-                        </li>
-                         <li>
-                            <a 
-                                href="{% url 'blog:create_blog_post' %}" 
-                                class="
-                                  block 
-                                  px-4 
-                                  py-2 
-                                  text-sm 
-                                  text-gray-700 
-                                  hover:bg-gray-100 
-                                  hover:text-gray-900 
-                                  dark:text-gray-200 
-                                  dark:hover:bg-gray-700 
-                                  dark:hover:text-gray-100" 
-                                role="menuitem"
-                                >
-                                    Post Article
-                            </a>
-                        </li>
-                        
-                        </li>
-                        <li>
-                            <a 
-                                href="{% url 'blog:my_posts' %}" 
-                                class="
-                                  block 
-                                  px-4 
-                                  py-2 
-                                  text-sm 
-                                  text-gray-700 
-                                  hover:bg-gray-100 
-                                  hover:text-gray-900 
-                                  dark:text-gray-200 
-                                  dark:hover:bg-gray-700 
-                                  dark:hover:text-gray-100" 
-                                role="menuitem"
-                                >
-                                    My Articles
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="{% url 'blog:messages' %}"
-                                class="
-                                 block
-                                 px-4
-                                 py-2
-                                 text-sm
-                                 text-gray-700
-                                 hover:bg-gray-100
-                                 hover:text-gray-900
-                                 dark:text-gray-200
-                                 dark:hover:bg-gray-700
-                                 dark:hover:text-gray-100"
-                                role="menuitem"
-                                >
-                                    Messages
-                            </a>
-                        </li>
-                       
-                        <li>
-                            <a 
-                                href="{% url 'blog:logout' %}" 
-                                class="
-                                  block 
-                                  px-4 
-                                  py-2 
-                                  text-sm 
-                                  text-gray-700 
-                                  hover:bg-gray-100 
-                                  hover:text-gray-900 
-                                  dark:text-gray-200 
-                                  dark:hover:bg-gray-700 
-                                  dark:hover:text-gray-100" 
-                                role="menuitem"
-                                >
-                                    Logout
-                            </a>
-                        </li>
+                        <!-- link to user profile -->
+                        <a
+                            href="{% url 'blog:profile' user.username %}"
+                            class="
+                                block
+                                px-4
+                                py-2
+                                text-sm
+                                text-gray-700
+                                hover:bg-gray-100
+                                hover:text-gray-900
+                                dark:text-gray-200
+                                dark:hover:bg-gray-700
+                                dark:hover:text-gray-100"
+                            role="menuitem"
+                        >
+                            Profile
+                        </a>
+                        <a
+                            href="{% url 'blog:create_blog_post' %}"
+                            class="
+                                block
+                                px-4
+                                py-2
+                                text-sm
+                                text-gray-700
+                                hover:bg-gray-100
+                                hover:text-gray-900
+                                dark:text-gray-200
+                                dark:hover:bg-gray-700
+                                dark:hover:text-gray-100"
+                            role="menuitem"
+                        >
+                            Post
+                        </a>
+                        <a
+                            href="{% url 'blog:my_posts' %}"
+                            class="
+                                block
+                                px-4
+                                py-2
+                                text-sm
+                                text-gray-700
+                                hover:bg-gray-100
+                                hover:text-gray-900
+                                dark:text-gray-200
+                                dark:hover:bg-gray-700
+                                dark:hover:text-gray-100"
+                            role="menuitem"
+                        >
+                            My Blogs
+                        </a>
+                        <a
+                            href="{% url 'blog:messages' %}"
+                            class="
+                                block
+                                px-4
+                                py-2
+                                text-sm
+                                text-gray-700
+                                hover:bg-gray-100
+                                hover:text-gray-900
+                                dark:text-gray-200
+                                dark:hover:bg-gray-700
+                                dark:hover:text-gray-100"
+                            role="menuitem"
+                        >
+                            Messages
+                        </a>
+                        <a
+                            href="{% url 'blog:logout' %}"
+                            class="
+                                block
+                                px-4
+                                py-2
+                                text-sm
+                                text-gray-700
+                                hover:bg-gray-100
+                                hover:text-gray-900
+                                dark:text-gray-200
+                                dark:hover:bg-gray-700
+                                dark:hover:text-gray-100"
+                            role="menuitem"
+                        >
+                            Logout
+                        </a>
                         <!-- Delete Profile Link-->
-                        <li>
-                            <a 
-                                href="{% url 'blog:delete_profile' user.username %}" 
-                                class="
-                                  block 
-                                  px-4 
-                                  py-2 
-                                  text-sm 
-                                  text-red-700 
-                                  hover:bg-gray-100 
-                                  hover:text-brown-900 
-                                  dark:text-brown-200 
-                                  dark:hover:bg-gray-700 
-                                  dark:hover:text-brown-100" 
-                                role="menuitem"
-                            >
-                                Delete Account
-                            </a>
+                        <a
+                            href="{% url 'blog:delete_profile' user.username %}"
+                            class="
+                                block
+                                px-4
+                                py-2
+                                text-sm
+                                text-red-700
+                                hover:bg-gray-100
+                                hover:text-brown-900
+                                dark:text-brown-200
+                                dark:hover:bg-gray-700
+                                dark:hover:text-brown-100"
+                            role="menuitem"
+                        >
+                            Delete Account
+                        </a>
                         {% else %}
-                        <li>
-                            <a 
-                                href="{% url 'blog:register' %}" 
-                                class="
-                                  block 
-                                  px-4 
-                                  py-2 
-                                  text-sm 
-                                  text-gray-700 
-                                  hover:bg-gray-100 
-                                  hover:text-gray-900 
-                                  dark:text-gray-200 
-                                  dark:hover:bg-gray-700 
-                                  dark:hover:text-gray-100" 
-                                role="menuitem"
-                            >
-                                Register
-                            </a>
-                        </li>
-                        <li>
-                            <a 
-                                href="{% url 'blog:login' %}" 
-                                class="
-                                  block 
-                                  px-4 
-                                  py-2 
-                                  text-sm 
-                                  text-gray-700 
-                                  hover:bg-gray-100 
-                                  hover:text-gray-900 
-                                  dark:text-gray-200 
-                                  dark:hover:bg-gray-700 
-                                  dark:hover:text-gray-100" 
-                                role="menuitem"
-                            >
-                                Login
-                            </a>
-                        </li>
+                        <a
+                            href="{% url 'blog:register' %}"
+                            class="
+                                block
+                                px-4
+                                py-2
+                                text-sm
+                                text-gray-700
+                                hover:bg-gray-100
+                                hover:text-gray-900
+                                dark:text-gray-200
+                                dark:hover:bg-gray-700
+                                dark:hover:text-gray-100"
+                            role="menuitem"
+                        >
+                            Register
+                        </a>
+                        <a
+                            href="{% url 'blog:login' %}"
+                            class="
+                                block
+                                px-4
+                                py-2
+                                text-sm
+                                text-gray-700
+                                hover:bg-gray-100
+                                hover:text-gray-900
+                                dark:text-gray-200
+                                dark:hover:bg-gray-700
+                                dark:hover:text-gray-100"
+                            role="menuitem"
+                        >
+                            Login
+                        </a>
                         {% endif %}
-                    </ul>
-                </div> 
+                    </div>
+                </li>
+            </a>
+
+            <!-- Dropdown Toggle Button -->
+            <button
+                @click="isOpen = !isOpen"
+                class="
+                    md:hidden
+                    inline-flex
+                    items-center
+                    p-2
+                    ml-3
+                    text-sm
+                    text-gray-500 rounded-lg
+                    hover:bg-gray-100
+                    focus:outline-none
+                    focus:ring-2
+                    focus:ring-gray-200
+                    dark:text-gray-400
+                    dark:hover:bg-gray-700
+                    dark:focus:ring-gray-600
+                    animate-slide-down
+                    transition-transform
+                    duration-800
+                    ease-in-out
+                    "
+                aria-controls="navbar-default"
+                aria-expanded="false"
+            >
+                <span class="sr-only">
+                    Open main menu
+                </span>
+                <!-- SVG icon for the button -->
+                <svg
+                    class="w-6 h-6"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        fill-rule="evenodd"
+                        d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1
+                        1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1
+                        1 0 110 2H4a1 1 0 01-1-1z"
+                        clip-rule="evenodd"
+                    >
+                    </path>
+                </svg>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div
+                id="navbar-default"
+                :class="{ 'block': isOpen, 'hidden': !isOpen }"
+            >
+                <ul
+                    class="flex flex-col p-4 mt-4 border
+                          border-gray-100 rounded-lg bg-gray-50
+                          dark:bg-gray-800
+                          dark:border-gray-700"
+                >
+                    <li>
+                        <a
+                            href="{% url 'blog:index' %}"
+                            class="
+                                block
+                                px-2
+                                py-1
+                                text-gray-700
+                                hover:bg-gray-100
+                                hover:text-gray-900
+                                dark:text-gray-200
+                                dark:hover:bg-gray-700
+                                dark:hover:text-gray-100"
+                            role="menuitem"
+                        >
+                            Home
+                        </a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li>
+                        <a
+                            href="{% url 'blog:profile' user.username %}"
+                            class="
+                                block
+                                px-4
+                                py-2
+                                text-sm
+                                text-gray-700
+                                hover:bg-gray-100
+                                hover:text-gray-900
+                                dark:text-gray-200
+                                dark:hover:bg-gray-700
+                                dark:hover:text-gray-100"
+                            role="menuitem"
+                        >
+                            Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="{% url 'blog:create_blog_post' %}"
+                            class="
+                                block
+                                px-4
+                                py-2
+                                text-sm
+                                text-gray-700
+                                hover:bg-gray-100
+                                hover:text-gray-900
+                                dark:text-gray-200
+                                dark:hover:bg-gray-700
+                                dark:hover:text-gray-100"
+                            role="menuitem"
+                        >
+                            Post Article
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="{% url 'blog:my_posts' %}"
+                            class="
+                                block
+                                px-4
+                                py-2
+                                text-sm
+                                text-gray-700
+                                hover:bg-gray-100
+                                hover:text-gray-900
+                                dark:text-gray-200
+                                dark:hover:bg-gray-700
+                                dark:hover:text-gray-100"
+                            role="menuitem"
+                        >
+                            My Articles
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="{% url 'blog:messages' %}"
+                            class="
+                                block
+                                px-4
+                                py-2
+                                text-sm
+                                text-gray-700
+                                hover:bg-gray-100
+                                hover:text-gray-900
+                                dark:text-gray-200
+                                dark:hover:bg-gray-700
+                                dark:hover:text-gray-100"
+                            role="menuitem"
+                        >
+                            Messages
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="{% url 'blog:logout' %}"
+                            class="
+                                block
+                                px-4
+                                py-2
+                                text-sm
+                                text-gray-700
+                                hover:bg-gray-100
+                                hover:text-gray-900
+                                dark:text-gray-200
+                                dark:hover:bg-gray-700
+                                dark:hover:text-gray-100"
+                            role="menuitem"
+                        >
+                            Logout
+                        </a>
+                    </li>
+                    <!-- Delete Profile Link-->
+                    <li>
+                        <a
+                            href="{% url 'blog:delete_profile' user.username %}"
+                            class="
+                                block
+                                px-4
+                                py-2
+                                text-sm
+                                text-red-700
+                                hover:bg-gray-100
+                                hover:text-brown-900
+                                dark:text-brown-200
+                                dark:hover:bg-gray-700
+                                dark:hover:text-brown-100"
+                            role="menuitem"
+                        >
+                            Delete Account
+                        </a>
+                    {% else %}
+                    <li>
+                        <a
+                            href="{% url 'blog:register' %}"
+                            class="
+                                block
+                                px-4
+                                py-2
+                                text-sm
+                                text-gray-700
+                                hover:bg-gray-100
+                                hover:text-gray-900
+                                dark:text-gray-200
+                                dark:hover:bg-gray-700
+                                dark:hover:text-gray-100"
+                            role="menuitem"
+                        >
+                            Register
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="{% url 'blog:login' %}"
+                            class="
+                                block
+                                px-4
+                                py-2
+                                text-sm
+                                text-gray-700
+                                hover:bg-gray-100
+                                hover:text-gray-900
+                                dark:text-gray-200
+                                dark:hover:bg-gray-700
+                                dark:hover:text-gray-100"
+                            role="menuitem"
+                        >
+                            Login
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
             </div>
         </nav>
     </div>
