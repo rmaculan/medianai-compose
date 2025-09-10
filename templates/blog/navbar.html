@@ -141,17 +141,7 @@
                         >
                             Messages
                         </a>
-                        <form action="{% url 'search:search_view' %}" method="get" class="flex items-center">
-                            <input
-                                type="text"
-                                name="q"
-                                class="px-2 py-1 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700"
-                                placeholder="Search..."
-                        >
-                            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white px-3 py-1 rounded-r-md">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </form>
+                        
                         <a
                             href="{% url 'blog:logout' %}"
                             class="
@@ -462,6 +452,17 @@
             </div>
         </nav>
     </div>
+    <form action="{% url 'search:search_view' %}" method="get" class="flex items-center">
+        <input
+            type="text"
+            name="q"
+            class="px-2 py-1 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700"
+                                placeholder="Search..."
+        >
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white px-3 py-1 rounded-r-md">
+            <i class="fas fa-search"></i>
+        </button>
+    </form>
 </section>
 
 <script>
