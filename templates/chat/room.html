@@ -126,7 +126,15 @@
         }
 
         .single-message {
-          max-width: 75%; /* Allow messages to take more width */
+          max-width: 90%; /* Allow messages to take more width on small screens */
+        }
+
+        .msg-body {
+          font-size: 0.9rem; /* Smaller text on mobile */
+        }
+
+        .sender {
+          display: none; /* Hide sender name on small screens */
         }
 
         .chats-container {
@@ -161,7 +169,7 @@
 
       .single-message {
         width: fit-content;
-        max-width: 60%;
+        max-width: 70%; /* Increase max-width for better text flow */
         clear: both;
       }
 
@@ -173,6 +181,7 @@
         font-size: 1rem;
         border-radius: 0.25rem;
         word-wrap: break-word;
+        overflow-wrap: break-word; /* Ensure long words break */
       }
 
       .sent {
