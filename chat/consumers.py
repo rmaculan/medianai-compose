@@ -29,23 +29,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = text_data_json['message']
         sender = text_data_json['sender']
         
-        try:
-            await self.save_message(sender, message)
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'chat_message',
-                    'message': message,
-                    'sender': sender,
-                    'receiver': None  # Add this line
-                }
-            )
-        except Exception as e:
-            print(f"Error in ChatConsumer receive or save_message: {e}")
-            # Optionally send an error message back to the client
-            await self.send(text_data=json.dumps({
-                'error': f"Failed to send message: {e}"
-            }))
+        await self.save_message(sender, message)
+        
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': 'chat_message',
+                'message': message,
+                'sender': sender,
+                'receiver': None  # Add this line
+            }
+        )
 
     async def chat_message(self, event):
         message = event['message']
@@ -59,7 +53,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def save_message(self, sender_username, message):
-        print(f"Attempting to save message: '{message}' from '{sender_username}' in room '{self.room_name}'")
         from marketplace.models import ItemMessage
         
         room = Room.objects.get(room_name=self.room_name)
