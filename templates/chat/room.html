@@ -5,6 +5,12 @@
     <meta name="viewport" 
       content="width=device-width, initial-scale=1.0" />
     <title>Chat Room</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@1.9.12"
+            integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
       * {
         margin: 0;
@@ -126,15 +132,7 @@
         }
 
         .single-message {
-          max-width: 90%; /* Allow messages to take more width on small screens */
-        }
-
-        .msg-body {
-          font-size: 0.9rem; /* Smaller text on mobile */
-        }
-
-        .sender {
-          display: none; /* Hide sender name on small screens */
+          max-width: 75%; /* Allow messages to take more width */
         }
 
         .chats-container {
@@ -169,7 +167,7 @@
 
       .single-message {
         width: fit-content;
-        max-width: 70%; /* Increase max-width for better text flow */
+        max-width: 60%;
         clear: both;
       }
 
@@ -181,7 +179,6 @@
         font-size: 1rem;
         border-radius: 0.25rem;
         word-wrap: break-word;
-        overflow-wrap: break-word; /* Ensure long words break */
       }
 
       .sent {
@@ -331,3 +328,4 @@
     </script>
   </body>
 </html>
+
