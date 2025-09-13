@@ -79,7 +79,8 @@ services:
       - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/certs:/etc/nginx/certs:ro # ssl certs
+      - ./nginx/medianai.io.crt:/etc/ssl/certs/medianai.io.crt:ro # ssl certs
+      - ./nginx/medianai.io.key:/etc/ssl/private/medianai.io.key:ro # ssh key
       - media_data:/app/media # Serve media files through Nginx
     depends_on:
       - django-web
