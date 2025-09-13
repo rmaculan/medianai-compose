@@ -79,6 +79,7 @@ services:
       - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certs:/etc/nginx/certs:ro # ssl certs
       - media_data:/app/media # Serve media files through Nginx
     depends_on:
       - django-web

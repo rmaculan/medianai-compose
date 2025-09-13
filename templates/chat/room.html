@@ -206,7 +206,8 @@
     </div>
     <script>
 
-      const socketURL = `ws://${window.location.host}/ws/messages/{{room_name}}/`;
+      const socketProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+      const socketURL = `${socketProtocol}${window.location.host}/ws/messages/{{room_name}}/`;
       console.log("Establishing Socket Connection");
       const socket = new WebSocket(socketURL);
 
