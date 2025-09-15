@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *.so
 
+# Docker stuff:
+compose.yaml
+
 # Django stuff:
 *.log
 local_settings.py
